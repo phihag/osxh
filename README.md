@@ -11,7 +11,7 @@ Document Format
 OSXH is an application of [XML](http://www.w3.org/TR/REC-xml/), with the following restrictions:
 
 * The root element must have the tag `osxh`.
-* By default, all other elements must be one of `a`, `b`, `br`, `code`, `div`, `em`, `li`, `ol`, `p`, `span`, `strong`, `u`, `ul`.
+* By default, all other elements must be one of `a`, `b`, `br`, `code`, `div`, `em`, `img`, `li`, `ol`, `p`, `span`, `strong`, `u`, `ul`.
 * The `href` attribute (only on `a`) may contain URLs starting with `http://` or `https://`.
 * The `src` attribute (only on `img`) must start with either `data:image/png;` or `data:image/jpeg;`.
 * All other attributes are ignored by default.
