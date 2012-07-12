@@ -1,4 +1,9 @@
-write ;)
+fix make test in suite
+use mocha
+test mailto: URLs
+node.js embedded
 demo
-to and from markdown
+DOM to OSXH
+import from markdown
+export to markdown
 test with node.js: https://github.com/znerol/node-xmlshim

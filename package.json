@@ -1,0 +1,22 @@
+{
+	"name": "osxh",
+	"main": "./osxh.js",
+	"version": "0.1.0",
+	"author": "Philipp Hagemeister <phihag@phihag.de>",
+	"description": "Obviously Safe XHTML",
+	"scripts": {
+		"test": "mocha ."
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/nodejitsu/http-server.git"
+	},
+	"dependencies": {
+		"xmlshim": "*"
+	},
+	"devDependencies": {
+		"mocha": "*",
+		"jsdom": "*"
+	},
+	"license": "MIT"
+}
