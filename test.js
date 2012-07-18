@@ -10,7 +10,7 @@ var osxh = require('./osxh');
 
 // Trivial runner without moccha
 if (typeof describe == 'undefined') {
-	describe = function(s, f) {
+	var describe = function(s, f) {
 		f();
 	};
 }
