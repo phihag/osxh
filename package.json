@@ -12,11 +12,12 @@
 		"url": "https://github.com/nodejitsu/http-server.git"
 	},
 	"dependencies": {
-		"xmlshim": "*"
+		"xmldom": "*"
 	},
 	"devDependencies": {
 		"mocha": "*",
-		"jsdom": "*"
+		"jsdom": "*",
+		"simplesets": "*"
 	},
 	"license": "MIT"
 }

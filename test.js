@@ -4,6 +4,7 @@ var assert = require('assert');
 var fs = require('fs');
 var path = require('path');
 var jsdom = require('jsdom');
+var simplesets = require('simplesets');
 
 var osxh = require('./osxh');
 
@@ -12,20 +13,36 @@ function _readTestFile(fn) {
     return fs.readFileSync(path.join(TESTCASES_DIR, fn), 'utf8');
 }
 
+function _findTests() {
+	var allFiles = fs.readdirSync(TESTCASES_DIR);
+	var res = new simplesets.Set();
+	var inputFiles = allFiles.forEach(function (fn) {
+		var m = fn.match(/^([^.].*)\.[a-z]+$/);
+		if (m) {
+			res.add(m[1]);
+		}
+	});
+	res = res.array().sort();
+	return res;
+}
+
 var testFuncs = {
 render: function(testName) {
     var inputs = _readTestFile(testName + '.input');
     var outputs = _readTestFile(testName + '.dom');
     var dom = jsdom.level(3, 'core');
-    var doc = new dom.Document('<html><body></body></html>');
-    var resultNodes = osxh().render(inputs, doc);
+    var doc = jsdom.jsdom('<html>\n<body></body>\n</html>');
+    var win = doc.createWindow();
+    var body = win.document.getElementsByTagName('body')[0];
+    
+    osxh().renderInto(inputs, body);
+    assert.equal(win.document.innerHTML, outputs);
 }
 };
 
-var tests = [
-    'render-basic1',
-    'render-basic1'
-];
+
+var tests = _findTests();
+assert.ok(tests.length >= 1);
 
 var suites = {};
 tests.forEach(function(tname) {

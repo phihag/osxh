@@ -22,16 +22,16 @@ var osxh = (function(cfg, glbls) {
 	}
 	if (typeof glbls == "undefined") {
 		// load XML tools from dependency management
-		var xmlshim = require('xmlshim');
+		var xmldom = require('xmldom');
 		glbls = {
-			XMLSerializer: xmlshim.XMLSerializer,
-			DOMParser: xmlshim.DOMParser,
+			XMLSerializer: xmldom.XMLSerializer,
+			DOMParser: xmldom.DOMParser,
 			document: null
 		};
 	}
 
 	var DEFAULT_CONFIG = {
-		"elements": ["a", "b", "br", "code", "div", "em", "img", "li", "ol", "p", "span", "strong", "u", "ul"],
+		"elements": ["a", "b", "br", "code", "div", "em", "h1", "h2", "h3", "h4", "h5", "h6", "img", "i", "li", "ol", "p", "span", "strong", "table", "tbody", "tfoot", "thead", "td", "th", "u", "ul"],
 		"attributes": [],
 		"specialAttributes": {
 			"href": function(tagName, val) {
@@ -75,23 +75,28 @@ var osxh = (function(cfg, glbls) {
 			return outEl;
 		};
 
-		var render_walkTree = function(xmlNodeList, outContainer) {
+		var render_walkTree = function(xmlNodeList, nodeList) {
 			for (var i = 0;i < xmlNodeList.length;i++) {
 				var n = xmlNodeList[i];
 
 				if (n.nodeType == _DOM_TEXT_NODE) {
 					var tn = doc.createTextNode(n.data);
-					outContainer.appendChild(tn);
+					nodeList.push(tn);
 					continue;
 				}
 
 				if (n.nodeType == _DOM_ELEMENT_NODE) {
 					if (cfg.elements.indexOf(n.tagName) >= 0) {
 						var outEl = _renderElement(n.tagName, n.attributes);
-						render_walkTree(n.childNodes, outEl);
+						var myChildren = [];
+						render_walkTree(n.childNodes, myChildren);
+						myChildren.forEach(function (c) {
+							outEl.appendChild(c);
+						});
+						nodeList.push(outEl);
 					} else {
 						// Unsupported element, render its contents
-						render_walkTree(n.childNodes, outContainer);
+						render_walkTree(n.childNodes, nodeList);
 					}
 				}
 			}
@@ -105,16 +110,16 @@ var osxh = (function(cfg, glbls) {
 				"message": "Not an osxh element (incorrect root element name)"
 			};
 		}
-		var outRoot = doc.createElement("osxh");
-		render_walkTree(rootNode.childNodes, outRoot);
-		return outRoot.childNodes;
+		var res = [];
+		render_walkTree(rootNode.childNodes, res);
+		return res;
 	};
 
 	return {
 	/**
 	* @param str The OSXH string to render
 	* @param doc The document to render it in. (optional. glbls.document by default)
-	* @returns An NodeList of rendered DOM nodes.
+	* @returns An array of rendered DOM nodes.
 	*/
 	render: function(str, doc) {
 		if (typeof doc == "undefined") {
@@ -134,10 +139,10 @@ var osxh = (function(cfg, glbls) {
 	*/
 	renderInto: function(str, container) {
 		var nodes = _render(str, container.ownerDocument);
-		for (var i = 0;i < nodes.length;i++) {
-			container.appendChild(nodes[i]);
-		}
-	},
+		nodes.forEach(function(n) {
+			container.appendChild(n);
+		});
+	}
 
 	};
 });
