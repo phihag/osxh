@@ -9,16 +9,15 @@ var simplesets = require('simplesets');
 var osxh = require('./osxh');
 
 // Trivial runner without moccha
-if (typeof describe == 'undefined') {
-	var describe = function(s, f) {
-		f();
-	};
-}
-if (typeof it == 'undefined') {
-	var it = function(s, f) {
-		f();
-	};
-}
+var _describe = ((typeof describe == 'undefined') ?
+	function(s, f) {f();} :
+	describe
+);
+var _it = ((typeof it == 'undefined') ?
+	function(s, f) {f();} :
+	it
+);
+
 
 var TESTCASES_DIR = path.join(__dirname, 'testcases');
 function _readTestFile(fn) {
@@ -67,9 +66,9 @@ tests.forEach(function(tname) {
 });
 
 for (var suiteName in suites) {
-	describe(suiteName, function() {
+	_describe(suiteName, function() {
 		suites[suiteName].forEach(function(specificName) {
-			it(specificName, function() {
+			_it(specificName, function() {
 				var testName = suiteName + '-' + specificName;
 				testFuncs[suiteName](testName);
 			});
