@@ -35,7 +35,7 @@ var osxh = (function(cfg, glbls) {
 		"attributes": [],
 		"specialAttributes": {
 			"href": function(tagName, val) {
-				return tagName == "a" && /^https?:\/\//.test(val);
+				return tagName == "a" && /^(?:https?:\/\/|mailto:)/.test(val);
 			},
 			"src": function(tagName, val) {
 				return tagName == "img" && /^data:image\/(png|jpeg);/.test(val);
@@ -63,7 +63,7 @@ var osxh = (function(cfg, glbls) {
 
 				var testFunc = cfg.specialAttributes[at.name];
 				if (typeof testFunc != "undefined") {
-					if (testFunc(n.tagName, at.value)) {
+					if (testFunc(tagName, at.value)) {
 						outEl.setAttribute(at.name, at.value);
 					}
 				} else {

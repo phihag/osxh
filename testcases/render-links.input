@@ -1,0 +1,6 @@
+<osxh>
+<a href="http://example.com?x=a">allowed HTTP link</a>
+<a href="https://www.example.com?x=a">allowed HTTPS link</a>
+<a href="mailto:test@example.com?subject=Hello">allowed mailto link</a>
+<a href="about:evilz">forbidden link</a>
+</osxh>
