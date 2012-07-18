@@ -8,6 +8,18 @@ var simplesets = require('simplesets');
 
 var osxh = require('./osxh');
 
+// Trivial runner without moccha
+if (typeof describe == 'undefined') {
+	describe = function(s, f) {
+		f();
+	};
+}
+if (typeof it == 'undefined') {
+	var it = function(s, f) {
+		f();
+	};
+}
+
 var TESTCASES_DIR = path.join(__dirname, 'testcases');
 function _readTestFile(fn) {
     return fs.readFileSync(path.join(TESTCASES_DIR, fn), 'utf8');
