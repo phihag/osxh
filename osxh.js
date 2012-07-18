@@ -1,26 +1,25 @@
 "use strict";
 
-
 /**
 * @param cfg The OSXH configuration. Entries overwrite the default configuration (see below). optional.
 * @param glbls The global window object to use. (optional, required in non-browser environments).
 */
 var osxh = (function(cfg, glbls) {
-	var _DOM_ELEMENT_NODE = 1;
-	var _DOM_TEXT_NODE = 3;
+	var _DOM_ELEMENT_NODE = 1,
+	    _DOM_TEXT_NODE = 3;
 
-	if (typeof cfg == "undefined") {
+	if (typeof cfg === "undefined") {
 		cfg = {};
 	}
-	
+
 	// The following block accesses an unbound variable.
 	// This is fine (and even desired) in a browser context
-	if (typeof glbls == "undefined") {
-		if (typeof window != "undefined") {
+	if (typeof glbls === "undefined") {
+		if (typeof window !== "undefined") {
 			glbls = window;
 		}
 	}
-	if (typeof glbls == "undefined") {
+	if (typeof glbls === "undefined") {
 		// load XML tools from dependency management
 		var xmldom = require('xmldom');
 		glbls = {
@@ -35,16 +34,16 @@ var osxh = (function(cfg, glbls) {
 		"attributes": [],
 		"specialAttributes": {
 			"href": function(tagName, val) {
-				return tagName == "a" && /^(?:https?:\/\/|mailto:)/.test(val);
+				return tagName === "a" && /^(?:https?:\/\/|mailto:)/.test(val);
 			},
 			"src": function(tagName, val) {
-				return tagName == "img" && /^data:image\/(png|jpeg);/.test(val);
+				return tagName === "img" && /^data:image\/(png|jpeg);/.test(val);
 			}
 		}
 	};
 	// Merge configuration
 	for (var p in DEFAULT_CONFIG) {
-		if (typeof cfg[p] == "undefined") {
+		if (typeof cfg[p] === "undefined") {
 			cfg[p] = DEFAULT_CONFIG[p];
 		}
 	}
@@ -62,7 +61,7 @@ var osxh = (function(cfg, glbls) {
 				var at = attrs[i];
 
 				var testFunc = cfg.specialAttributes[at.name];
-				if (typeof testFunc != "undefined") {
+				if (typeof testFunc !== "undefined") {
 					if (testFunc(tagName, at.value)) {
 						outEl.setAttribute(at.name, at.value);
 					}
@@ -79,13 +78,13 @@ var osxh = (function(cfg, glbls) {
 			for (var i = 0;i < xmlNodeList.length;i++) {
 				var n = xmlNodeList[i];
 
-				if (n.nodeType == _DOM_TEXT_NODE) {
+				if (n.nodeType === _DOM_TEXT_NODE) {
 					var tn = doc.createTextNode(n.data);
 					nodeList.push(tn);
 					continue;
 				}
 
-				if (n.nodeType == _DOM_ELEMENT_NODE) {
+				if (n.nodeType === _DOM_ELEMENT_NODE) {
 					if (cfg.elements.indexOf(n.tagName) >= 0) {
 						var outEl = _renderElement(n.tagName, n.attributes);
 						var myChildren = [];
@@ -104,7 +103,7 @@ var osxh = (function(cfg, glbls) {
 
 		var xmlDoc = _parseXML(str);
 		var rootNode = xmlDoc.documentElement;
-		if (rootNode.tagName != "osxh") {
+		if (rootNode.tagName !== "osxh") {
 			throw {
 				"name": "OSXHException",
 				"message": "Not an osxh element (incorrect root element name)"
@@ -122,7 +121,7 @@ var osxh = (function(cfg, glbls) {
 	* @returns An array of rendered DOM nodes.
 	*/
 	render: function(str, doc) {
-		if (typeof doc == "undefined") {
+		if (typeof doc === "undefined") {
 			doc = glbls.document;
 		}
 		if (!doc) {
