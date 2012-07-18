@@ -17,7 +17,8 @@
 	"devDependencies": {
 		"mocha": "*",
 		"jsdom": "*",
-		"simplesets": "*"
+		"simplesets": "*",
+		"cover": "*"
 	},
 	"license": "MIT"
 }

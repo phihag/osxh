@@ -5,6 +5,9 @@ help:
 	@echo 'make targets:'
 	@echo '  help          This message'
 	@echo '  deps          Download and install all dependencies (for compiling / testing / CLI operation)'
+	@echo '  test          Run tests'
+	@echo '  cd            Generate and display coverage information'
+	@echo '  clean         Remove temporary files'
 
 
 deps:
@@ -14,6 +17,18 @@ deps:
 test:
 	@npm test
 
-.PHONY: default help deps test
+clean:
+	@npm clean
+
+cov: deps
+	node_modules/.bin/cover run test.js
+	node_modules/.bin/cover report html
+
+coverage: cov
+
+cd: cov
+	xdg-open cover_html/index.html
+
+.PHONY: default help deps test clean cov coverage cd
 
 
