@@ -1,9 +1,6 @@
 test configuration overwriting (and specify it)
-coverage
+test entities
+test all attribute specs
 demo
-DOM to OSXH
 allow CSS (at least position, top/left, all in percent, document need to have a wrapper preventing overflow)
-import from markdown
-export to markdown
-test with node.js: https://github.com/znerol/node-xmlshim
-write a test that ensures element lists in README and implementation are identical
+DOM to OSXH

@@ -8,7 +8,7 @@ var simplesets = require('simplesets');
 
 var osxh = require('./osxh');
 
-// Trivial runner without moccha
+// Trivial runner
 var _describe = ((typeof describe == 'undefined') ?
 	function(s, f) {f();} :
 	describe
@@ -75,3 +75,44 @@ for (var suiteName in suites) {
 		});
 	});
 }
+
+_describe('Specification should match default configuration', function() {
+	var readmeText = fs.readFileSync(__dirname + '/README.md', 'utf-8');
+	var config = osxh().config;
+	
+	_it('elements', function() {
+		var m = readmeText.match(/elements must be one of (.*)\./);
+		assert.ok(m);
+		var docElements = m[1].split(', ').map(function (s) {
+			var m = s.match(/^`([a-z0-9]+)`$/);
+			assert.ok(m);
+			return m[1];
+		});
+		assert.ok(docElements.length >= 2);
+
+		assert.deepEqual(config.elements, docElements);
+	});
+
+	_it('attributes', function() {
+		var attrRe = '`([a-z0-9]+)`(?: attribute| and `([a-z0-9]+)` attributes)',
+		    matches = readmeText.match(new RegExp(attrRe, 'g')),
+		    docAttrs = [];
+
+		matches.forEach(function(matchedText) {
+			var m = matchedText.match(new RegExp(attrRe));
+			assert.ok(m[1]);
+			docAttrs.push(m[1]);
+			if (m[2]) {
+				docAttrs.push(m[2]);
+			}
+		});
+		docAttrs.sort();
+		assert.ok(docAttrs.length >= 2);
+
+		var implAttrs = Object.keys(config.specialAttributes);
+		implAttrs.push.apply(implAttrs, config.attributes);
+		implAttrs.sort();
+		
+		assert.deepEqual(implAttrs, docAttrs);
+	});
+});

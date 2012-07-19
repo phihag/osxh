@@ -1,17 +1,10 @@
 "use strict";
 
 /**
-* @param cfg The OSXH configuration. Entries overwrite the default configuration (see below). optional.
+* @param addCfg The OSXH configuration. Entries amend or overwrite the default configuration (see below). optional.
 * @param glbls The global window object to use. (optional, required in non-browser environments).
 */
-var osxh = (function(cfg, glbls) {
-	var _DOM_ELEMENT_NODE = 1,
-	    _DOM_TEXT_NODE = 3;
-
-	if (typeof cfg === "undefined") {
-		cfg = {};
-	}
-
+var osxh = (function(addCfg, glbls) {
 	// The following block accesses an unbound variable.
 	// This is fine (and even desired) in a browser context
 	if (typeof glbls === "undefined") {
@@ -21,7 +14,7 @@ var osxh = (function(cfg, glbls) {
 	}
 	if (typeof glbls === "undefined") {
 		// load XML tools from dependency management
-		var xmldom = require('xmldom');
+		var xmldom = require("xmldom");
 		glbls = {
 			XMLSerializer: xmldom.XMLSerializer,
 			DOMParser: xmldom.DOMParser,
@@ -29,23 +22,47 @@ var osxh = (function(cfg, glbls) {
 		};
 	}
 
-	var DEFAULT_CONFIG = {
-		"elements": ["a", "b", "br", "code", "div", "em", "h1", "h2", "h3", "h4", "h5", "h6", "img", "i", "li", "ol", "p", "span", "strong", "table", "tbody", "tfoot", "thead", "td", "th", "u", "ul"],
-		"attributes": [],
-		"specialAttributes": {
-			"href": function(tagName, val) {
-				return tagName === "a" && /^(?:https?:\/\/|mailto:)/.test(val);
-			},
-			"src": function(tagName, val) {
-				return tagName === "img" && /^data:image\/(png|jpeg);/.test(val);
+	var _DOM_ELEMENT_NODE = 1,
+	    _DOM_TEXT_NODE = 3,
+		cfg = {
+			"elements": ["a", "b", "br", "code", "div", "em", "h1", "h2", "h3", "h4", "h5", "h6", "i", "img", "li", "ol", "p", "span", "strong", "table", "tbody", "td", "tfoot", "th", "thead", "tr", "u", "ul"],
+			"attributes": [],
+			"specialAttributes": {
+				"href": function(tagName, val) {
+					return tagName === "a" && /^(?:https?:\/\/|mailto:)/.test(val);
+				},
+				"src": function(tagName, val) {
+					return tagName === "img" && /^data:image\/(png|jpeg);/.test(val);
+				},
+				"colspan": function(tagName, val) {
+					return tagName === "td" || tagName === "tr";
+				},
+				"rowspan": function(tagName, val) {
+					return tagName === "td" || tagName === "tr";
+				},
+				"alt": function(tagName, val) {
+					return tagName === "img";
+				}
 			}
-		}
-	};
+		};
+
 	// Merge configuration
-	for (var p in DEFAULT_CONFIG) {
-		if (typeof cfg[p] === "undefined") {
-			cfg[p] = DEFAULT_CONFIG[p];
-		}
+	if (addCfg) {
+		["elements", "attributes"].forEach(function(arrayKey) {
+			if (addCfg[arrayKey]) {
+				cfg[arrayKey].apply(cfg[arrayKey], addCfg[arrayKey]);
+			}
+		});
+		["specialAttributes"].forEach(function(arrayKey) {
+			if (addCfg[objKey]) {
+				var newVals = addCfg[objKey];
+				for (var k in newVals) {
+					if (newVals.hasOwnProperty(k)) {
+						cfg[objKey][k] = newVals[k];
+					}
+				}
+			}
+		});
 	}
 
 	var _serializeXML = function(xmlDoc) {
@@ -141,7 +158,8 @@ var osxh = (function(cfg, glbls) {
 		nodes.forEach(function(n) {
 			container.appendChild(n);
 		});
-	}
+	},
+	config: cfg
 
 	};
 });
