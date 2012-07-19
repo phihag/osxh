@@ -14,9 +14,10 @@ OSXH is an application of [XML](http://www.w3.org/TR/REC-xml/), with the followi
 
 * The root element must have the tag name `osxh`.
 * By default, all other elements must be one of `a`, `b`, `br`, `code`, `div`, `em`, `h1`, `h2`, `h3`, `h4`, `h5`, `h6`, `i`, `img`, `li`, `ol`, `p`, `span`, `strong`, `table`, `tbody`, `td`, `tfoot`, `th`, `thead`, `tr`, `u`, `ul`.
-* The `href` attribute (only on `a`) may contain URLs starting with `http://`, `https://`, or `mailto:`.
-* The `src` attribute (only on `img`) must start with either `data:image/png;` or `data:image/jpeg;`.
-* The `alt` attribute is allowed on `img`.
-* The `colspan` and `rowspan` attributes are allowed on table cells, with integer values only.
-* All other attributes are ignored by default.
+* Attributes must be one of:
+	* `href`(only on `a`) may contain URLs starting with `http://`, `https://`, or `mailto:`.
+	* `src` (only on `img`) must start with either `data:image/png;` or `data:image/jpeg;`.
+	* `alt` is allowed on `img`.
+	* `colspan` and `rowspan` are allowed on table cells, with integer values only.
+	* `title` is allowed everywhere.
 * XML nodes that are not elements, attributes or text nodes are ignored.

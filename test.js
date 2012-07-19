@@ -108,8 +108,9 @@ _describe('Specification should match default configuration', function() {
 	});
 
 	_it('attributes', function() {
-		var attrRe = '`([a-z0-9]+)`(?: attribute| and `([a-z0-9]+)` attributes)',
-		    matches = readmeText.match(new RegExp(attrRe, 'g')),
+		var attrTextMatch = readmeText.match(/Attributes must be one of:[\s\S]+?\n[^\t]/m),
+			attrRe = '\t[*] `([a-z0-9]+)`(?: and `([a-z0-9]+)`)?',
+		    matches = attrTextMatch[0].match(new RegExp(attrRe, 'g')),
 		    docAttrs = [];
 
 		matches.forEach(function(matchedText) {

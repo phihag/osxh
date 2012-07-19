@@ -26,7 +26,7 @@ var osxh = (function(addCfg, glbls) {
 	    _DOM_TEXT_NODE = 3,
 		cfg = {
 			"elements": ["a", "b", "br", "code", "div", "em", "h1", "h2", "h3", "h4", "h5", "h6", "i", "img", "li", "ol", "p", "span", "strong", "table", "tbody", "td", "tfoot", "th", "thead", "tr", "u", "ul"],
-			"attributes": [],
+			"attributes": ["title"],
 			"specialAttributes": {
 				"href": function(tagName, val) {
 					return tagName === "a" && /^(?:https?:\/\/|mailto:)/.test(val);
