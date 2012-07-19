@@ -91,6 +91,11 @@ _describe('Specification should match default configuration', function() {
 		assert.ok(docElements.length >= 2);
 
 		assert.deepEqual(config.elements, docElements);
+
+		var allElemsTest = _readTestFile('render-allelements.input', 'utf-8');
+		docElements.forEach(function(el) {
+			assert.ok(allElemsTest.indexOf('<' + el) >= 0);
+		});
 	});
 
 	_it('attributes', function() {
