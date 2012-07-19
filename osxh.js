@@ -21,6 +21,18 @@ var osxh = (function(addCfg, glbls) {
 			document: null
 		};
 	}
+	if (! glbls.DOMParser) {
+		throw {
+			"name": "OSXHException",
+			"message": "DOMParser not available. Ancient browser?"
+		};
+	}
+	if (! glbls.XMLSerializer) {
+		throw {
+			"name": "OSXHException",
+			"message": "XMLSerializer not available. Ancient browser?"
+		};
+	}
 
 	var _DOM_ELEMENT_NODE = 1,
 	    _DOM_TEXT_NODE = 3,
@@ -32,7 +44,7 @@ var osxh = (function(addCfg, glbls) {
 					return tagName === "a" && /^(?:https?:\/\/|mailto:)/.test(val);
 				},
 				"src": function(tagName, val) {
-					return tagName === "img" && /^data:image\/(png|jpeg);/.test(val);
+					return tagName === "img" && /^data:image\/(gif|jpeg|png);/.test(val);
 				},
 				"colspan": function(tagName, val) {
 					return tagName === "td" || tagName === "tr";
@@ -53,7 +65,7 @@ var osxh = (function(addCfg, glbls) {
 				cfg[arrayKey].apply(cfg[arrayKey], addCfg[arrayKey]);
 			}
 		});
-		["specialAttributes"].forEach(function(arrayKey) {
+		["specialAttributes"].forEach(function(objKey) {
 			if (addCfg[objKey]) {
 				var newVals = addCfg[objKey];
 				for (var k in newVals) {

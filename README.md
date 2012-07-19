@@ -16,7 +16,7 @@ OSXH is an application of [XML](http://www.w3.org/TR/REC-xml/), with the followi
 * By default, all other elements must be one of `a`, `b`, `br`, `code`, `div`, `em`, `h1`, `h2`, `h3`, `h4`, `h5`, `h6`, `i`, `img`, `li`, `ol`, `p`, `span`, `strong`, `table`, `tbody`, `td`, `tfoot`, `th`, `thead`, `tr`, `u`, `ul`.
 * Attributes must be one of:
 	* `href`(only on `a`) may contain URLs starting with `http://`, `https://`, or `mailto:`.
-	* `src` (only on `img`) must start with either `data:image/png;` or `data:image/jpeg;`.
+	* `src` (only on `img`) must start with either `data:image/gif;`, `data:image/jpeg;`, or `data:image/png;`.
 	* `alt` is allowed on `img`.
 	* `colspan` and `rowspan` are allowed on table cells, with integer values only.
 	* `title` is allowed everywhere.

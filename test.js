@@ -5,6 +5,7 @@ var fs = require('fs');
 var path = require('path');
 var jsdom = require('jsdom');
 var simplesets = require('simplesets');
+var xmldom = require('xmldom');
 
 var osxh = require('./osxh');
 
@@ -37,6 +38,16 @@ function _findTests() {
 	return res;
 }
 
+var _domNodesToHTML = function(nodes, doc) {
+    var html = '';
+    nodes.forEach(function(node) {
+		var container = doc.createElement('container');
+		container.appendChild(node);
+		html += container.innerHTML;
+    });
+    return html;
+};
+
 var testFuncs = {
 render: function(testName) {
     var inputs = _readTestFile(testName + '.input');
@@ -44,17 +55,23 @@ render: function(testName) {
     var dom = jsdom.level(3, 'core');
     var doc = jsdom.jsdom('<html>\n<body></body>\n</html>');
     var win = doc.createWindow();
+	win.XMLSerializer = xmldom.XMLSerializer;
+	win.DOMParser = xmldom.DOMParser;
+
     var body = win.document.getElementsByTagName('body')[0];
-    
-    var rendered = osxh().render(inputs, doc);
-    var html = "";
-    rendered.forEach(function(node) {
-		var container = doc.createElement('container');
-		container.appendChild(node);
-		html += container.innerHTML;
-    });
+    var rendered,html;
+
+    // Render with window
+    rendered = osxh({}, win).render(inputs);
+    html = _domNodesToHTML(rendered, doc);
     assert.equal(html, outputs);
-    
+
+    // Render with document
+    rendered = osxh().render(inputs, doc);
+    html = _domNodesToHTML(rendered, doc);
+    assert.equal(html, outputs);
+
+    // Render into an element
     osxh().renderInto(inputs, body);
     assert.equal(body.innerHTML, outputs);
 }
