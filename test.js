@@ -57,7 +57,7 @@ assert.ok(tests.length >= 1);
 
 var suites = {};
 tests.forEach(function(tname) {
-	var m = tname.match(/^([^-]+)-([^-]+)$/);
+	var m = tname.match(/^([^-]+)-([^\.]+)$/);
 	var testType = m[1];
 	if (! (testType in suites)) {
 		suites[testType] = [];
