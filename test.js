@@ -46,8 +46,17 @@ render: function(testName) {
     var win = doc.createWindow();
     var body = win.document.getElementsByTagName('body')[0];
     
+    var rendered = osxh().render(inputs, doc);
+    var html = "";
+    rendered.forEach(function(node) {
+		var container = doc.createElement('container');
+		container.appendChild(node);
+		html += container.innerHTML;
+    });
+    assert.equal(html, outputs);
+    
     osxh().renderInto(inputs, body);
-    assert.equal(win.document.innerHTML, outputs);
+    assert.equal(body.innerHTML, outputs);
 }
 };
 

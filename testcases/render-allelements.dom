@@ -1,5 +1,4 @@
-<html>
-<body>
+
 This test lists all allowed elements.
 <a>a</a>
 <b>b</b>
@@ -30,5 +29,3 @@ This test lists all allowed elements.
 <ul>
 	<li>ul</li>
 </ul>
-</body>
-</html>
