@@ -84,7 +84,9 @@ renderFail: function(testName) {
 	var o = osxh();
 	assert.throws(function() {
 		o.render(inputs, doc);
-	}, o.OSXHError);
+	}, function(err) {
+		return err.name == 'OSXHError';
+	});
 }
 };
 

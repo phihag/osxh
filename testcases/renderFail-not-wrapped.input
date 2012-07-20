@@ -1,0 +1,4 @@
+<div>
+OSXH documents must be wrapped with an `osxh` element.
+This ensures that we fail fast if someone manages to smuggle in HTML.
+</div>
