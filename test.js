@@ -118,6 +118,7 @@ _describe('Specification should match default configuration', function() {
 
 		assert.deepEqual(config.elements, docElements);
 
+		// Do we test all of them?
 		var allElemsTest = _readTestFile('render-allelements.input', 'utf-8');
 		docElements.forEach(function(el) {
 			assert.ok(allElemsTest.indexOf('<' + el) >= 0);
@@ -148,3 +149,4 @@ _describe('Specification should match default configuration', function() {
 		assert.deepEqual(implAttrs, docAttrs);
 	});
 });
+

@@ -47,10 +47,10 @@ var osxh = (function(addCfg, glbls) {
 					return tagName === "img" && /^data:image\/(gif|jpeg|png);/.test(val);
 				},
 				"colspan": function(tagName, val) {
-					return tagName === "td" || tagName === "tr";
+					return (tagName === "td" || tagName === "th") && /^[0-9]+$/.test(val);
 				},
 				"rowspan": function(tagName, val) {
-					return tagName === "td" || tagName === "tr";
+					return (tagName === "td" || tagName === "th") && /^[0-9]+$/.test(val);
 				},
 				"alt": function(tagName, val) {
 					return tagName === "img";
