@@ -5,6 +5,7 @@ var fs = require('fs');
 var path = require('path');
 var jsdom = require('jsdom');
 var simplesets = require('simplesets');
+var vm = require('vm');
 var xmldom = require('xmldom');
 
 var osxh = require('./osxh');
@@ -22,7 +23,7 @@ var _it = ((typeof it == 'undefined') ?
 
 var TESTCASES_DIR = path.join(__dirname, 'testcases');
 function _readTestFile(fn) {
-    return fs.readFileSync(path.join(TESTCASES_DIR, fn), 'utf8');
+  return fs.readFileSync(path.join(TESTCASES_DIR, fn), 'utf8');
 }
 
 function _findTests() {
@@ -39,35 +40,35 @@ function _findTests() {
 }
 
 var _domNodesToHTML = function(nodes, doc) {
-    var html = '';
-    nodes.forEach(function(node) {
+  var html = '';
+  nodes.forEach(function(node) {
     var container = doc.createElement('container');
     container.appendChild(node);
     html += container.innerHTML;
-    });
-    return html;
+  });
+  return html;
 };
 
 var _loadTestcase = function(testName, requireOutputs) {
-    var inputs = _readTestFile(testName + '.input');
-    var outputs = undefined;
-    try {
+  var inputs = _readTestFile(testName + '.input');
+  var outputs = undefined;
+  try {
     outputs = _readTestFile(testName + '.output');
   } catch(e) {
     if (requireOutputs) {
       throw e;
     }
   }
-    var configs = '{}';
-    try {
+  var configs = '{}';
+  try {
     configs = _readTestFile(testName + '.config');
-    } catch(e) {
+  } catch(e) {
     ; // No special config, ignore
-    }
-    var config = JSON.parse(configs);
-    var dom = jsdom.level(3, 'core');
-    var doc = jsdom.jsdom('<html>\n<body></body>\n</html>');
-    var win = doc.createWindow();
+  }
+  var config = vm.runInNewContext('(' + configs + ')', {}, testName + '.config');
+  var dom = jsdom.level(3, 'core');
+  var doc = jsdom.jsdom('<html>\n<body></body>\n</html>');
+  var win = doc.createWindow();
   win.XMLSerializer = xmldom.XMLSerializer;
   win.DOMParser = xmldom.DOMParser;
 

@@ -1,0 +1,5 @@
+
+<div x="asdf f 3">x should be allowed everywhere</div>
+<div>y should be only be allowed on <code>a</code></div>
+<a y="b" x="a">(like this)</a>
+<a x="a">But the attribute value must be exactly "<code>b</code>"</a>
