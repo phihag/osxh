@@ -52,7 +52,7 @@ var _loadTestcase = function(testName, requireOutputs) {
     var inputs = _readTestFile(testName + '.input');
     var outputs = undefined;
     try {
-    outputs = _readTestFile(testName + '.dom');
+    outputs = _readTestFile(testName + '.output');
   } catch(e) {
     if (requireOutputs) {
       throw e;
