@@ -74,6 +74,17 @@ render: function(testName) {
     // Render into an element
     osxh().renderInto(inputs, body);
     assert.equal(body.innerHTML, outputs);
+},
+renderFail: function(testName) {
+	var inputs = _readTestFile(testName + '.input');
+	var dom = jsdom.level(3, 'core');
+    var doc = jsdom.jsdom('<html>\n<body></body>\n</html>');
+    var win = doc.createWindow();
+	win.XMLSerializer = xmldom.XMLSerializer;
+	var o = osxh();
+	assert.throws(function() {
+		o.render(inputs, doc);
+	}, o.OSXHError);
 }
 };
 
@@ -91,7 +102,8 @@ tests.forEach(function(tname) {
 	suites[testType].push(m[2]);
 });
 
-for (var suiteName in suites) {
+// mocha does some magic with describe and its. Therefore, wrap the following in a function instead of using for ( .. in)
+Object.keys(suites).forEach(function(suiteName) {
 	_describe(suiteName, function() {
 		suites[suiteName].forEach(function(specificName) {
 			_it(specificName, function() {
@@ -100,7 +112,7 @@ for (var suiteName in suites) {
 			});
 		});
 	});
-}
+});
 
 _describe('Specification should match default configuration', function() {
 	var readmeText = fs.readFileSync(__dirname + '/README.md', 'utf-8');
@@ -150,3 +162,37 @@ _describe('Specification should match default configuration', function() {
 	});
 });
 
+_describe('Error conditions:', function() {
+	_it('Missing DOMParser', function() {
+		var fakeWin = {
+			XMLSerializer: xmldom.XMLSerializer
+		};
+		assert.throws(function() {
+			osxh({}, fakeWin);
+		}, function(err) {
+			return err.name == 'OSXHError' && /DOMParser/.test(err.message);
+		});
+	});
+	_it('Missing XMLSerializer', function() {
+		var fakeWin = {
+			DOMParser: xmldom.DOMParser
+		};
+		assert.throws(function() {
+			osxh({}, fakeWin);
+		}, function(err) {
+			return err.name == 'OSXHError' && /XMLSerializer/.test(err.message);
+		});
+	});
+	_it('Rendering without a document', function() {
+		var fakeWin = {
+			DOMParser: xmldom.DOMParser,
+			XMLSerializer: xmldom.XMLSerializer
+		};
+		var o = osxh({}, fakeWin);
+		assert.throws(function() {
+			o.render('<osxh></osxh>');
+		}, function(err) {
+			return err.name == 'OSXHError' && /document/.test(err.message);
+		});
+	});
+});

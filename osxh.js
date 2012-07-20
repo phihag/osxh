@@ -21,17 +21,18 @@ var osxh = (function(addCfg, glbls) {
 			document: null
 		};
 	}
+	
+	function OSXHError(message) {
+		this.name = "OSXHError";
+		this.message = (message || "");
+	}
+	OSXHError.prototype = new Error();
+	
 	if (! glbls.DOMParser) {
-		throw {
-			"name": "OSXHException",
-			"message": "DOMParser not available. Ancient browser?"
-		};
+		throw new OSXHError("DOMParser not available. Ancient browser?");
 	}
 	if (! glbls.XMLSerializer) {
-		throw {
-			"name": "OSXHException",
-			"message": "XMLSerializer not available. Ancient browser?"
-		};
+		throw new OSXHError("XMLSerializer not available. Ancient browser?");
 	}
 
 	var _DOM_ELEMENT_NODE = 1,
@@ -133,10 +134,7 @@ var osxh = (function(addCfg, glbls) {
 		var xmlDoc = _parseXML(str);
 		var rootNode = xmlDoc.documentElement;
 		if (rootNode.tagName !== "osxh") {
-			throw {
-				"name": "OSXHException",
-				"message": "Not an osxh element (incorrect root element name)"
-			};
+			throw new OSXHError("Not an osxh element (root element name is not 'osxh')");
 		}
 		var res = [];
 		render_walkTree(rootNode.childNodes, res);
@@ -154,10 +152,7 @@ var osxh = (function(addCfg, glbls) {
 			doc = glbls.document;
 		}
 		if (!doc) {
-			throw {
-				"name": "OSXHException",
-				"message": "Cannot render; no output document. Check the doc parameter."
-			}
+			throw new OSXHError("Cannot render; no output document. Check the doc parameter.");
 		}
 		return _render(str, doc);
 	},
