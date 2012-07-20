@@ -1,0 +1,13 @@
+<osxh>
+<table>
+<tbody>
+<tr><th rowspan="2">That should work</th></tr>
+<tr><td rowspan="1">Allowed as well</td></tr>
+<tr><td rowspan="javascript:evilz()">Forbidden</td></tr>
+<tr><td rowspan="1.5">Woot?</td></tr>
+<tr rowspan="3"><td>not applicable</td></tr>
+</tbody>
+</table>
+
+<div rowspan="3">ignored</div>
+</osxh>

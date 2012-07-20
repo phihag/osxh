@@ -1,0 +1,12 @@
+
+<table>
+<tbody>
+<tr><th rowspan="2">That should work</th></tr>
+<tr><td rowspan="1">Allowed as well</td></tr>
+<tr><td>Forbidden</td></tr>
+<tr><td>Woot?</td></tr>
+<tr><td>not applicable</td></tr>
+</tbody>
+</table>
+
+<div>ignored</div>
