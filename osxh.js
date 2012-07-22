@@ -9,7 +9,7 @@ var osxh = (function(addCfg, glbls) {
   // This is fine (and even desired) in a browser context
   if (typeof glbls === "undefined") {
     if (typeof window !== "undefined") {
-      glbls = window;
+      glbls = window; // Tested in a vm context // pragma: nocover
     }
   }
   if (typeof glbls === "undefined") {
@@ -172,6 +172,6 @@ var osxh = (function(addCfg, glbls) {
 });
 
 // Simplify usage in node.js
-if (typeof module != "") {
+if (typeof module !== "undefined") {
   module.exports = osxh;
 }

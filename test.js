@@ -203,6 +203,7 @@ _describe('Error conditions:', function() {
       return err.name == 'OSXHError' && /DOMParser/.test(err.message);
     });
   });
+
   _it('Missing XMLSerializer', function() {
     var fakeWin = {
       DOMParser: xmldom.DOMParser
@@ -213,6 +214,7 @@ _describe('Error conditions:', function() {
       return err.name == 'OSXHError' && /XMLSerializer/.test(err.message);
     });
   });
+
   _it('Rendering without a document', function() {
     var fakeWin = {
       DOMParser: xmldom.DOMParser,
@@ -224,5 +226,29 @@ _describe('Error conditions:', function() {
     }, function(err) {
       return err.name == 'OSXHError' && /document/.test(err.message);
     });
+  });
+});
+
+_describe('Test in a virtual browser context', function() {
+  _it('with a static basic document', function() {
+    var fakeWin = {
+      DOMParser: xmldom.DOMParser,
+      XMLSerializer: xmldom.XMLSerializer,
+      document: jsdom.jsdom('<html>\n<body></body>\n</html>')
+    };
+
+    var osxhCode = fs.readFileSync(__dirname + '/osxh.js', 'utf-8');
+    var code = (osxhCode + '\n\n' +
+            'var exc;try{\n' +
+            'var rendered = osxh().render("<osxh>a</osxh>");\n' + 
+            '_assert(rendered.length == 1);\n' +
+            '_assert(rendered[0].data == "a");' +
+            '} catch(e) {exc = e;}; exc;');
+    var r = vm.runInNewContext(code, {window: fakeWin, console: console, _assert: assert.ok});
+    assert.ok(r === undefined, r);
+
+    // Must also work without console
+    var r = vm.runInNewContext(code, {window: fakeWin, _assert: assert.ok});
+    assert.ok(r === undefined, r);
   });
 });
