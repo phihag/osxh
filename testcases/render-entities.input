@@ -1,0 +1,5 @@
+<osxh>
+XML entity references (&amp; &quot; &apos; &lt; &gt;) should all just work.
+They are required in attributes: <a title="&quot;"></a>, <b title='&apos;'></b>.
+Same goes for numeric ones like, &#x2190; and &#65; .
+</osxh>

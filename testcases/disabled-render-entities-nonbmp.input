@@ -1,0 +1,4 @@
+<osxh>
+This requires nodejs 0.9.0.
+Characters not in the BMP: &#x1F603;, &#128516;.
+</osxh>

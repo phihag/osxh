@@ -110,7 +110,11 @@ renderFail: function(testName) {
   }, function(err) {
     return err.name == 'OSXHError';
   });
+},
+disabled: function(testName) {
+  ; // Tests temporarily disabled
 }
+
 };
 
 
@@ -133,6 +137,7 @@ Object.keys(suites).forEach(function(suiteName) {
     suites[suiteName].forEach(function(specificName) {
       _it(specificName, function() {
         var testName = suiteName + '-' + specificName;
+        assert.ok(testFuncs[suiteName], 'Invalid test type name ' + suiteName);
         testFuncs[suiteName](testName);
       });
     });

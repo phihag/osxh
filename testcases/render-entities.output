@@ -1,0 +1,4 @@
+
+XML entity references (&amp; " ' &lt; &gt;) should all just work.
+They are required in attributes: <a title="&quot;"></a>, <b title="'"></b>.
+Same goes for numeric ones like, ← and A .
