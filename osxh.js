@@ -157,7 +157,6 @@ var osxh = (function(addCfg, glbls) {
           var attributes = [];
           attributes.item = function(i) {return attributes[i];}
           var el = {
-            _impl: "osxh",
             nodeType: _DOM_ELEMENT_NODE,
             tagName: tagName,
             childNodes: children,
@@ -177,9 +176,6 @@ var osxh = (function(addCfg, glbls) {
             }
           };
           el.appendChild = function(c) {
-            if (c._impl != "osxh") {
-              throw new OSXHError("Invalid DOM construction");
-            }
             if (children.length === 0) {
               el.firstChild = c;
             } else {
@@ -191,7 +187,6 @@ var osxh = (function(addCfg, glbls) {
       },
       createTextNode: function(data) {
         return {
-          _impl: "osxh",
           nodeType: _DOM_TEXT_NODE,
           data: data,
           childNodes: []
