@@ -49,15 +49,14 @@ var _domNodesToHTML = function(nodes, doc) {
   return html;
 };
 
-var _loadTestcase = function(testName, requireOutputs) {
-  var inputs = _readTestFile(testName + '.input');
-  var outputs = undefined;
-  try {
-    outputs = _readTestFile(testName + '.output');
-  } catch(e) {
-    if (requireOutputs) {
-      throw e;
-    }
+var _loadTestcase = function(testName, requireOutputs, createDoc) {
+  if (typeof createDoc === 'undefined') {
+    createDoc = true;
+  }
+  var tc = {};
+  tc.inputs = _readTestFile(testName + '.input');
+  if (requireOutputs) {
+    tc.outputs = _readTestFile(testName + '.output');
   }
   var configs = '{}';
   try {
@@ -65,20 +64,16 @@ var _loadTestcase = function(testName, requireOutputs) {
   } catch(e) {
     ; // No special config, ignore
   }
-  var config = vm.runInNewContext('(' + configs + ')', {}, testName + '.config');
-  var dom = jsdom.level(3, 'core');
-  var doc = jsdom.jsdom('<html>\n<body></body>\n</html>');
-  var win = doc.createWindow();
-  win.XMLSerializer = xmldom.XMLSerializer;
-  win.DOMParser = xmldom.DOMParser;
+  tc.config = vm.runInNewContext('(' + configs + ')', {}, testName + '.config');
 
-  return {
-    win: win,
-    doc: doc,
-    inputs: inputs,
-    outputs: outputs,
-    config: config
-  };
+  if (createDoc) {
+    tc.doc = jsdom.jsdom('<html>\n<body></body>\n</html>');
+    tc.win = tc.doc.createWindow();
+    tc.win.XMLSerializer = xmldom.XMLSerializer;
+    tc.win.DOMParser = xmldom.DOMParser;
+  }
+
+  return tc;
 };
 
 var testFuncs = {
@@ -112,7 +107,18 @@ renderFail: function(testName) {
   });
 },
 disabled: function(testName) {
-  ; // Tests temporarily disabled
+  ; // Test temporarily disabled
+},
+serialize: function(testName) {
+  var tc = _loadTestcase(testName, true, false);
+  var html = '<html><body>' + tc.inputs + '</body></html>';
+  var doc = jsdom.jsdom(html);
+  var win = doc.createWindow();
+  var body = win.document.getElementsByTagName('body')[0];
+  assert.ok(body.childNodes.length > 0);
+  var xml = osxh(tc.config).serialize(body.childNodes);
+
+  assert.equal(xml, tc.outputs);
 }
 
 };

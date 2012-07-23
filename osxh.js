@@ -36,8 +36,10 @@ var osxh = (function(addCfg, glbls) {
   }
 
   var _DOM_ELEMENT_NODE = 1,
+    _DOM_ATTRIBUTE_NODE = 2,
     _DOM_TEXT_NODE = 3,
-      cfg = {
+    _DOM_DOCUMENT_NODE = 9,
+    cfg = {
       "elements": ["a", "b", "br", "code", "div", "em", "h1", "h2", "h3", "h4", "h5", "h6", "i", "img", "li", "ol", "p", "span", "strong", "table", "tbody", "td", "tfoot", "th", "thead", "tr", "u", "ul"],
       "attributes": ["title"],
       "specialAttributes": {
@@ -56,8 +58,8 @@ var osxh = (function(addCfg, glbls) {
         "alt": function(tagName, val) {
           return tagName === "img";
         }
-      }
-    };
+    }
+  };
 
   // Merge configuration
   if (addCfg) {
@@ -84,7 +86,9 @@ var osxh = (function(addCfg, glbls) {
   var _parseXML = function(str) {
     return (new glbls.DOMParser()).parseFromString(str, "text/xml");
   };
-  var _render = function(str, doc) {
+  var _renderNodes = function(nodes, doc, fixTagName) {
+    fixTagName = fixTagName || function(tn) {return tn;};
+
     var _renderElement = function(tagName, attrs) {
       var outEl = doc.createElement(tagName);
       for (var i = 0;i < attrs.length;i++) {
@@ -115,8 +119,9 @@ var osxh = (function(addCfg, glbls) {
         }
 
         if (n.nodeType === _DOM_ELEMENT_NODE) {
-          if (cfg.elements.indexOf(n.tagName) >= 0) {
-            var outEl = _renderElement(n.tagName, n.attributes);
+          var tagName = fixTagName(n.tagName);
+          if (cfg.elements.indexOf(tagName) >= 0) {
+            var outEl = _renderElement(tagName, n.attributes);
             var myChildren = [];
             render_walkTree(n.childNodes, myChildren);
             myChildren.forEach(function (c) {
@@ -131,15 +136,73 @@ var osxh = (function(addCfg, glbls) {
       }
     };
 
+    var res = [];
+    render_walkTree(nodes, res);
+    return res;
+  };
+  var _render = function(str, doc) {
     var xmlDoc = _parseXML(str);
     var rootNode = xmlDoc.documentElement;
     if (rootNode.tagName !== "osxh") {
       throw new OSXHError("Not an osxh element (root element name is not 'osxh')");
     }
-    var res = [];
-    render_walkTree(rootNode.childNodes, res);
-    return res;
+    return _renderNodes(rootNode.childNodes, doc);
   };
+
+  var _vdoc = function(namespace, rootTagName) {
+    var res = {
+      nodeType: _DOM_DOCUMENT_NODE,
+      createElement: function(tagName) {
+          var children = [];
+          var attributes = [];
+          attributes.item = function(i) {return attributes[i];}
+          var el = {
+            _impl: "osxh",
+            nodeType: _DOM_ELEMENT_NODE,
+            tagName: tagName,
+            childNodes: children,
+            attributes: attributes,
+            setAttribute: function(name, value) {
+              for (var i = 0;i < attributes.length;i++) {
+                if (attributes[i].name === name) {
+                  attributes[i].value = value;
+                  return;
+                }
+              }
+              attributes.push({
+                nodeType: _DOM_ATTRIBUTE_NODE,
+                name: name,
+                value: value
+              });
+            }
+          };
+          el.appendChild = function(c) {
+            if (c._impl != "osxh") {
+              throw new OSXHError("Invalid DOM construction");
+            }
+            if (children.length === 0) {
+              el.firstChild = c;
+            } else {
+              children[children.length - 1].nextSibling = c;
+            }
+            children.push(c);
+          };
+          return el;
+      },
+      createTextNode: function(data) {
+        return {
+          _impl: "osxh",
+          nodeType: _DOM_TEXT_NODE,
+          data: data,
+          childNodes: []
+        };
+      }
+    };
+    
+    res.documentElement = res.createElement(rootTagName);
+    res.firstChild = res.documentElement;
+    return res;
+  }
 
   return {
   /**
@@ -166,8 +229,25 @@ var osxh = (function(addCfg, glbls) {
       container.appendChild(n);
     });
   },
-  config: cfg
+  config: cfg,
+  /**
+  * Virtual XML DOM implementation. Required for rendering, since some DOM implementations (notably jsdom) mess with capitalizatoin.
+  */
+  _vdoc: _vdoc,
+  /**
+  * Serialize a node list to an OSXH string.
+  * @param nodes A NodeList object or an array of Node
+  */
+  serialize: function(nodes) {
+    var doc = _vdoc(null, "osxh");
+    var resNodes = _renderNodes(nodes, doc, function(tn) {return tn.toLowerCase();});
+    resNodes.forEach(function(n) {
+      doc.documentElement.appendChild(n);
+    });
 
+    var xml = _serializeXML(doc);
+    return xml;
+  }
   };
 });
 
