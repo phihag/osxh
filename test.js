@@ -115,7 +115,9 @@ serialize: function(testName) {
   var doc = jsdom.jsdom(html);
   var win = doc.createWindow();
   var body = win.document.getElementsByTagName('body')[0];
-  assert.ok(body.childNodes.length > 0);
+  if (tc.inputs.length > 0) {
+    assert.ok(body.childNodes.length > 0);
+  }
   var xml = osxh(tc.config).serialize(body.childNodes);
 
   assert.equal(xml, tc.outputs);

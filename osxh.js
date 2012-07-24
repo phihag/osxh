@@ -149,56 +149,6 @@ var osxh = (function(addCfg, glbls) {
     return _renderNodes(rootNode.childNodes, doc);
   };
 
-  var _vdoc = function(namespace, rootTagName) {
-    var res = {
-      nodeType: _DOM_DOCUMENT_NODE,
-      createElement: function(tagName) {
-          var children = [];
-          var attributes = [];
-          attributes.item = function(i) {return attributes[i];}
-          var el = {
-            nodeType: _DOM_ELEMENT_NODE,
-            tagName: tagName,
-            childNodes: children,
-            attributes: attributes,
-            setAttribute: function(name, value) {
-              for (var i = 0;i < attributes.length;i++) {
-                if (attributes[i].name === name) {
-                  attributes[i].value = value;
-                  return;
-                }
-              }
-              attributes.push({
-                nodeType: _DOM_ATTRIBUTE_NODE,
-                name: name,
-                value: value
-              });
-            }
-          };
-          el.appendChild = function(c) {
-            if (children.length === 0) {
-              el.firstChild = c;
-            } else {
-              children[children.length - 1].nextSibling = c;
-            }
-            children.push(c);
-          };
-          return el;
-      },
-      createTextNode: function(data) {
-        return {
-          nodeType: _DOM_TEXT_NODE,
-          data: data,
-          childNodes: []
-        };
-      }
-    };
-    
-    res.documentElement = res.createElement(rootTagName);
-    res.firstChild = res.documentElement;
-    return res;
-  }
-
   return {
   /**
   * @param str The OSXH string to render
@@ -226,22 +176,16 @@ var osxh = (function(addCfg, glbls) {
   },
   config: cfg,
   /**
-  * Virtual XML DOM implementation. Required for rendering, since some DOM implementations (notably jsdom) mess with capitalizatoin.
-  */
-  _vdoc: _vdoc,
-  /**
   * Serialize a node list to an OSXH string.
   * @param nodes A NodeList object or an array of Node
   */
-  serialize: function(nodes) {
-    var doc = _vdoc(null, "osxh");
+  serialize: function(nodes, doc) {
+    var doc = _parseXML('<osxh></osxh>');
     var resNodes = _renderNodes(nodes, doc, function(tn) {return tn.toLowerCase();});
     resNodes.forEach(function(n) {
       doc.documentElement.appendChild(n);
     });
-
-    var xml = _serializeXML(doc);
-    return xml;
+    return _serializeXML(doc);
   }
   };
 });
