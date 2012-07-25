@@ -1,0 +1,8 @@
+
+<div style="width: 10em;">width (and very basic)</div>
+<p style="height: 7.9ex;">floating point numbers</p>
+<p style="top: 9ch;">top</p>
+<p style="left: 1cm; right: 2mm; top: 129in; bottom: 0px; width: -9pt; height: 0.0pc;">absolute lengths</p>
+<div style="height: auto;">The auto special value</div>
+<div style="bottom: 10.212%;">percent</div>
+<div style="width: 1em;">some attacks</div>

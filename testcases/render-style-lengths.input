@@ -1,0 +1,9 @@
+<osxh>
+<div style="invalid: false; width: 10em; width: 42 em; width: expression(2px);">width (and very basic)</div>
+<p style="height:forbidden;height:7.9ex">floating point numbers</p>
+<p style="top: 9ch;">top</p>
+<p style="left: 1cm; right: 2mm; top: 129in; bottom: 0px; width: -9pt; height: 0.0pc;">absolute lengths</p>
+<div style="height: auto;">The auto special value</div>
+<div style="bottom: 10.212%; width; 9px; width:9px:a:a:a;">percent</div>
+<div style=" bottom: 12px:expression; bottom: 12px expression; bottom: expression9px; bottom: expression:9px; width: 1em; bottom: expression 9px; position: expression:absolute; position: absolute:expression">some attacks</div>
+</osxh>

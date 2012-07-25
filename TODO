@@ -1,4 +1,5 @@
+check rendering into an XML DOM
 allow CSS (at least position, top/left, all in percent, document need to have a wrapper preventing overflow)
-DOM to OSXH
-  test with an empty document
+  css: allow percent
+allow class (at least osxh_*)
 demo

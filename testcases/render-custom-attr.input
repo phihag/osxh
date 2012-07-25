@@ -1,0 +1,6 @@
+<osxh>
+<a forbidden="forbidden" forbidden2="forbidden (by another method)" allowed="unconditionally allowed" allowed2="unconditionally allowed" changed="changed by the function">a</a>
+<b allowed="forbidden in b" passthru="x
+
+y">b</b>
+</osxh>

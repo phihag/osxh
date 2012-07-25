@@ -41,43 +41,69 @@ var osxh = (function(addCfg, glbls) {
     _DOM_DOCUMENT_NODE = 9,
     cfg = {
       "elements": ["a", "b", "br", "code", "div", "em", "h1", "h2", "h3", "h4", "h5", "h6", "i", "img", "li", "ol", "p", "span", "strong", "table", "tbody", "td", "tfoot", "th", "thead", "tr", "u", "ul"],
-      "attributes": ["title"],
-      "specialAttributes": {
-        "href": function(tagName, val) {
-          return tagName === "a" && /^(?:https?:\/\/|mailto:)/.test(val);
+      "attributes": {
+        "href":   {"tagName": "^a$",     "value": "^(?:https?:\/\/|mailto:)"},
+        "src":    {"tagName": "^img$",   "value": "^data:image\/(?:gif|jpeg|png);"},
+        "colspan":{"tagName": "^td|th$", "value": "^[0-9]+$"},
+        "rowspan":{"tagName": "^td|th$", "value": "^[0-9]+$"},
+        "alt":    {"tagName": "^img$",   "value": "^"},
+        "title":  {"tagName": "^.*$",    "value": "^"},
+        "class": function(tagName, value, config) {
+          return value.split(/\s+/).filter(function(c) {
+            return /^osxh_[a-zA-Z0-9-_]+$/.test(c);
+          }).join(' ');
         },
-        "src": function(tagName, val) {
-          return tagName === "img" && /^data:image\/(gif|jpeg|png);/.test(val);
-        },
-        "colspan": function(tagName, val) {
-          return (tagName === "td" || tagName === "th") && /^[0-9]+$/.test(val);
-        },
-        "rowspan": function(tagName, val) {
-          return (tagName === "td" || tagName === "th") && /^[0-9]+$/.test(val);
-        },
-        "alt": function(tagName, val) {
-          return tagName === "img";
+        "style": function(tagName, value, config) {
+          if (!config.allowCSS) {
+            return false;
+          }
+
+          var res = "";
+          value.split(';').forEach(function (p) {
+            var m = p.match(/^\s*([a-z\-]+)\s*:\s*(.*?)\s*$/);
+            if (!m) {
+              return;
+            }
+            switch (m[1]) {
+            case "position":
+              if (/^(?:auto|absolute|relative|static)$/.test(m[2])) {
+                res += m[1] + ": " + m[2] + ";";
+              }
+              break;
+            case "width":
+            case "height":
+            case "top":
+            case "left":
+            case "right":
+            case "bottom":
+              if (/^(?:auto|0|-?[0-9]+(?:\.[0-9]*)?(?:%|em|ex|ch|cm|mm|in|px|pt|pc))$/.test(m[2])) {
+                res += m[1] + ": " + m[2] + ";";
+              }
+              break;
+            }
+          });
+         
+          return res;
         }
-    }
+    },
   };
 
   // Merge configuration
   if (addCfg) {
-    ["elements", "attributes"].forEach(function(arrayKey) {
-      if (addCfg[arrayKey]) {
-        cfg[arrayKey].push.apply(cfg[arrayKey], addCfg[arrayKey]);
-      }
-    });
-    ["specialAttributes"].forEach(function(objKey) {
-      if (addCfg[objKey]) {
-        var newVals = addCfg[objKey];
-        for (var k in newVals) {
-          if (newVals.hasOwnProperty(k)) {
-            cfg[objKey][k] = newVals[k];
-          }
+    if (addCfg.elements) {
+      cfg.elements.push.apply(cfg.elements, addCfg.elements);
+    }
+    if (addCfg.attributes) {
+      var newVals = addCfg.attributes;
+      for (var k in newVals) {
+        if (newVals.hasOwnProperty(k)) {
+          cfg.attributes[k] = newVals[k];
         }
       }
-    });
+    }
+    if (typeof addCfg.allowCSS !== "undefined") {
+      cfg.allowCSS = addCfg.allowCSS;
+    }
   }
 
   var _serializeXML = function(xmlDoc) {
@@ -94,13 +120,16 @@ var osxh = (function(addCfg, glbls) {
       for (var i = 0;i < attrs.length;i++) {
         var at = attrs[i];
 
-        var testFunc = cfg.specialAttributes[at.name];
-        if (typeof testFunc !== "undefined") {
-          if (testFunc(tagName, at.value)) {
+        var testSpec = cfg.attributes[at.name];
+        if (typeof testSpec === "object") {
+          if ((new RegExp(testSpec["tagName"])).test(tagName) && (new RegExp(testSpec["value"])).test(at.value)) {
             outEl.setAttribute(at.name, at.value);
           }
-        } else {
-          if (cfg.attributes.indexOf(at.name) >= 0) {
+        } else if (typeof testSpec === "function") {
+          var r = testSpec(tagName, at.value, cfg);
+          if (typeof r === "string") {
+            outEl.setAttribute(at.name, r);
+          } else if (r === true) {
             outEl.setAttribute(at.name, at.value);
           }
         }
@@ -180,7 +209,7 @@ var osxh = (function(addCfg, glbls) {
   * @param nodes A NodeList object or an array of Node
   */
   serialize: function(nodes, doc) {
-    var doc = _parseXML('<osxh></osxh>');
+    var doc = _parseXML("<osxh></osxh>");
     var resNodes = _renderNodes(nodes, doc, function(tn) {return tn.toLowerCase();});
     resNodes.forEach(function(n) {
       doc.documentElement.appendChild(n);

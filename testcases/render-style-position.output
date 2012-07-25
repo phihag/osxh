@@ -1,0 +1,8 @@
+
+<div style="position: absolute;">absolute</div>
+<div style="position: relative;">relative</div>
+<div style="position: static;">static</div>
+<div style="width: 1em;">some invalid values</div>
+<p style="width: 1em;">position:fixed is forbidden (although the container certainly might have that property).
+If you want to allow it, either configure a modified specialAttribute.style function or add a osxh_position_fixed class.</p>
+<a style="width: 1em;">basic attacks</a>

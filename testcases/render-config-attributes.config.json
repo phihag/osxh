@@ -1,0 +1,7 @@
+{
+  "attributes": {
+    "x": {"tagName": ".*", "value": ""},
+    "y": {"tagName": "^a$", "value": "^b$"},
+    "title": {"tagName": "forbidden^", "value": "^$"}
+  }
+}

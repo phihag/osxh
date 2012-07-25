@@ -1,3 +1,8 @@
 <osxh>
-The <code title=" Title attribute ">title</code> <b title="XML attribute">attribute</b> is allowed everywhere! <img title="xkcd would do this ..."/>
+The <code title=" &lt;Title attribute ">title</code> <b title="XML attribute">attribute</b> is allowed everywhere! <img title="xkcd would do this ..."/>
+<div title="this
+is
+a
+multi-line
+  title">xkcd-like</div>
 </osxh>

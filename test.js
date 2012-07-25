@@ -30,7 +30,7 @@ function _findTests() {
   var allFiles = fs.readdirSync(TESTCASES_DIR);
   var res = new simplesets.Set();
   var inputFiles = allFiles.forEach(function (fn) {
-    var m = fn.match(/^([^.].*)\.[a-z]+$/);
+    var m = fn.match(/^([^.]+)\.[a-z.]+$/);
     if (m) {
       res.add(m[1]);
     }
@@ -54,17 +54,34 @@ var _loadTestcase = function(testName, requireOutputs, createDoc) {
     createDoc = true;
   }
   var tc = {};
+
   tc.inputs = _readTestFile(testName + '.input');
+  
   if (requireOutputs) {
     tc.outputs = _readTestFile(testName + '.output');
   }
-  var configs = '{}';
+
+
+  var configs = undefined;
+  tc.config = {};
   try {
-    configs = _readTestFile(testName + '.config');
+    configs = _readTestFile(testName + '.config.json');
   } catch(e) {
     ; // No special config, ignore
   }
-  tc.config = vm.runInNewContext('(' + configs + ')', {}, testName + '.config');
+  if (configs !== undefined) {
+    tc.config = JSON.parse(configs);
+  } else {
+    try {
+      configs = _readTestFile(testName + '.config.js');
+    } catch(e) {
+      ; // No special config, ignore
+    }
+    if (configs !== undefined) {
+      tc.config = vm.runInNewContext('(' + configs + ')', {}, testName + '.config.js');
+    }
+  }
+  
 
   if (createDoc) {
     tc.doc = jsdom.jsdom('<html>\n<body></body>\n</html>');
@@ -132,6 +149,7 @@ assert.ok(tests.length >= 1);
 var suites = {};
 tests.forEach(function(tname) {
   var m = tname.match(/^([^-]+)-([^\.]+)$/);
+  assert.ok(m, 'Invalid test name ' + tname);
   var testType = m[1];
   if (! (testType in suites)) {
     suites[testType] = [];
@@ -176,11 +194,12 @@ _describe('Specification should match default configuration', function() {
   });
 
   _it('attributes', function() {
-    var attrTextMatch = readmeText.match(/Attributes must be one of:[\s\S]+?\n[^\t]/m),
-      attrRe = '\t[*] `([a-z0-9]+)`(?: and `([a-z0-9]+)`)?',
-        matches = attrTextMatch[0].match(new RegExp(attrRe, 'g')),
-        docAttrs = [];
+    var attrTextMatch = readmeText.match(/Attributes must be one of:[\s\S]+?\n(?!  )/m),
+      attrRe = '^ {2}[*] `([a-z0-9]+)`(?: and `([a-z0-9]+)`)?',
+      matches = attrTextMatch[0].match(new RegExp(attrRe, 'gm')),
+      docAttrs = [];
 
+    assert.ok(matches, 'regexp should match something');
     matches.forEach(function(matchedText) {
       var m = matchedText.match(new RegExp(attrRe));
       assert.ok(m[1]);
@@ -192,11 +211,10 @@ _describe('Specification should match default configuration', function() {
     docAttrs.sort();
     assert.ok(docAttrs.length >= 2);
 
-    var implAttrs = Object.keys(config.specialAttributes);
-    implAttrs.push.apply(implAttrs, config.attributes);
+    var implAttrs = Object.keys(config.attributes);
     implAttrs.sort();
     
-    assert.deepEqual(implAttrs, docAttrs);
+    assert.deepEqual(docAttrs, implAttrs);
   });
 });
 
