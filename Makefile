@@ -21,13 +21,15 @@ clean:
 	@npm clean
 
 cov: deps
+	rm -rf .coverage
+	mkdir -p .coverage
 	node_modules/.bin/cover run test.js
 	node_modules/.bin/cover report html
 
 coverage: cov
 
 cd: cov
-	xdg-open cover_html/index.html
+	xdg-open .coverage/html/index.html
 
 .PHONY: default help deps test clean cov coverage cd
 

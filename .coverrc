@@ -1,0 +1,8 @@
+{
+  "dataDirectory": ".coverage/data",
+  "debugDirectory": ".coverage/debug",
+
+  "html": {
+    "directory": ".coverage/html"
+  }
+}
