@@ -59,7 +59,7 @@ var osxh = (function(addCfg, glbls) {
           }
 
           var res = "";
-          value.split(';').forEach(function (p) {
+          value.split(";").forEach(function (p) {
             var m = p.match(/^\s*([a-z\-]+)\s*:\s*(.*?)\s*$/);
             if (!m) {
               return;
@@ -67,7 +67,7 @@ var osxh = (function(addCfg, glbls) {
             switch (m[1]) {
             case "position":
               if (/^(?:auto|absolute|relative|static)$/.test(m[2])) {
-                res += m[1] + ": " + m[2] + ";";
+                res += m[1] + ": " + m[2] + "; ";
               }
               break;
             case "width":
@@ -77,13 +77,13 @@ var osxh = (function(addCfg, glbls) {
             case "right":
             case "bottom":
               if (/^(?:auto|0|-?[0-9]+(?:\.[0-9]*)?(?:%|em|ex|ch|cm|mm|in|px|pt|pc))$/.test(m[2])) {
-                res += m[1] + ": " + m[2] + ";";
+                res += m[1] + ": " + m[2] + "; ";
               }
               break;
             }
           });
          
-          return res;
+          return res.substr(0, res.length-1);
         }
     },
   };

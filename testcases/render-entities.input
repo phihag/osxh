@@ -1,5 +1,6 @@
 <osxh>
-XML entity references (&amp; &quot; &apos; &lt; &gt;) should all just work.
-They are required in attributes: <a title="&quot;"></a>, <b title='&apos;'></b>.
+XML entity references (&amp; &quot; &apos; &lt;) should all just work.
+(ampersand gt; is not easily testable, since it is optional everywhere.)
+They are required in attributes: <a title="&quot;">a</a>, <b title='&apos;'>b</b>.
 Same goes for numeric ones like, &#x2190; and &#65; .
 </osxh>

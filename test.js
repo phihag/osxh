@@ -49,6 +49,10 @@ var _domNodesToHTML = function(nodes, doc) {
   return html;
 };
 
+var _unambiguousHTML = function(html) {
+  return html.replace(/(<[a-z]+|")\/>/g, '$1 />')
+};
+
 var _loadTestcase = function(testName, requireOutputs, createDoc) {
   if (typeof createDoc === 'undefined') {
     createDoc = true;
@@ -102,16 +106,27 @@ render: function(testName) {
     // Render with window
     rendered = osxh(tc.config, tc.win).render(tc.inputs);
     html = _domNodesToHTML(rendered, tc.doc);
+    html = _unambiguousHTML(html);
     assert.equal(html, tc.outputs);
 
     // Render with document
     rendered = osxh(tc.config).render(tc.inputs, tc.doc);
     html = _domNodesToHTML(rendered, tc.doc);
+    html = _unambiguousHTML(html);
     assert.equal(html, tc.outputs);
 
     // Render into an element
     osxh(tc.config).renderInto(tc.inputs, body);
-    assert.equal(body.innerHTML, tc.outputs);
+    html = _unambiguousHTML(body.innerHTML);
+    assert.equal(html, tc.outputs);
+
+    // Render into an xmldom document
+    var xmlDoc = (new xmldom.DOMParser()).parseFromString('<html>\n<body></body>\n</html>', 'text/xml');
+    var xmlBody = xmlDoc.documentElement.getElementsByTagName('body')[0];
+    rendered = osxh(tc.config).renderInto(tc.inputs, xmlBody);
+    html = (new xmldom.XMLSerializer()).serializeToString(xmlBody).replace(/^<body>|<\/body>$/g, '');
+    html = _unambiguousHTML(html);
+    assert.equal(html, tc.outputs);
 },
 renderFail: function(testName) {
   var tc = _loadTestcase(testName);

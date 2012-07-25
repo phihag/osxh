@@ -1,4 +1,5 @@
 
-XML entity references (&amp; " ' &lt; &gt;) should all just work.
-They are required in attributes: <a title="&quot;"></a>, <b title="'"></b>.
+XML entity references (&amp; " ' &lt;) should all just work.
+(ampersand gt; is not easily testable, since it is optional everywhere.)
+They are required in attributes: <a title="&quot;">a</a>, <b title="'">b</b>.
 Same goes for numeric ones like, ← and A .
