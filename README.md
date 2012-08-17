@@ -5,7 +5,36 @@ OSXH is an XHTML dialect that's obviously safe to include in a website. It is in
 
 In contrast to [Caja](https://github.com/theSmaw/Caja-HTML-Sanitizer) or [IE's toStaticHTML](http://msdn.microsoft.com/en-us/library/ie/cc848922.aspx), OSXH comes with an explicit specification of which code is valid. This means that the result is *reproducible*. Additionally, the result can always be rendered without downloading anything (this prevents [web bugs](http://en.wikipedia.org/wiki/Web_bug)).
 
-The [numerous ways to defeat blacklists](http://ha.ckers.org/xss.html) are defeated by a white-list approach. OSXH and its implementations shouldn't only be safe, it should be obvious that they are.
+The [numerous ways to defeat blacklists](http://ha.ckers.org/xss.html) do not apply since OSXH uses a white-list approach. OSXH and its implementations shouldn't only be safe, it should be obvious that they are.
+
+Usage (JavaScript)
+==================
+
+To get an osxh object, simply call osxh with the desired configuration:
+
+    var osxhi = osxh({allowCSS: true});
+
+Also, get a container element you want to render into:
+
+    var container = document.getElementById("container");
+
+You may want to style the container element in order to prevent user-supplied code from escaping it, like this:
+
+    #container {
+    	position: absolute;
+    	width: 80%;
+    	height: 100px;
+    	overflow: auto;
+	}
+
+Then, render the unsafe `osxh_code` like this:
+
+	var osxh_code = "<osxh><a href="javascript:alert('XSS');">click here</a></osxh>";
+    osxhi.renderInto(osxh_code, container);
+
+If you want to generate osxh code yourself, call `serialize`:
+
+	var osxh_code = osxhi.serialize(container.childNodes);
 
 Specification
 =============
@@ -30,7 +59,7 @@ OSXH is an application of [XML](http://www.w3.org/TR/REC-xml/), with the followi
 Styles
 ------
 
-If `useCSS` is set in the configuration, osxh allows some CSS declarations. You should make sure to render only into a properly sandboxed element, with `position` set to one of `absolute`, `relative`, or `fixed`, a fixed width/height, and `overflow` set to `auto`, `hidden` or `scroll`.
+If `useCSS` is set in the configuration, osxh allows some CSS declarations. You should make sure to render only into a properly sandboxed container element, with `position` set to one of `absolute`, `relative`, or `fixed`, a fixed width/height, and `overflow` set to `auto`, `hidden` or `scroll`.
 
 In any case, OSXH allows the following CSS properties:
 
