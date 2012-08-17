@@ -15,15 +15,15 @@ OSXH is an application of [XML](http://www.w3.org/TR/REC-xml/), with the followi
 * The root element must have the tag name `osxh`.
 * By default, all other elements must be one of `a`, `b`, `br`, `code`, `div`, `em`, `h1`, `h2`, `h3`, `h4`, `h5`, `h6`, `i`, `img`, `li`, `ol`, `p`, `span`, `strong`, `table`, `tbody`, `td`, `tfoot`, `th`, `thead`, `tr`, `u`, `ul`.
 * Attributes must be one of:
-  * `href` (only on `a`) may contain URLs starting with `http://`, `https://`, or `mailto:`.
-  * `src` (only on `img`) must start with either `data:image/gif;`, `data:image/jpeg;`, or `data:image/png;`.
-  * `alt` is allowed on `img`.
-  * `colspan` and `rowspan` are allowed on table cells, with integer values only.
-  * `title` is allowed everywhere.
-  * `class` attributes that contain a space-separated list of classes starting with `osxh_` are allowed. In particular, the following classes are suggested:
-    * `osxh_pre` for preformatted blocks of code (typical CSS: `white-space:pre`)
-    * `osxh_invisible` for temporarily invisible text, for example in a slide of a presentation (typical CSS: `visibility: hidden;`)
-  * `style` (only if the configuration includes `"useCSS": true`) may contain certain css declarations (see below)
+    + `href` (only on `a`) may contain URLs starting with `http://`, `https://`, or `mailto:`.
+    + `src` (only on `img`) must start with either `data:image/gif;`, `data:image/jpeg;`, or `data:image/png;`.
+    + `alt` is allowed on `img`.
+    + `colspan` and `rowspan` are allowed on table cells, with integer values only.
+    + `title` is allowed everywhere.
+    + `class` attributes that contain a space-separated list of classes starting with `osxh_` are allowed. In particular, the following classes are suggested:
+        - `osxh_pre` for preformatted blocks of code (typical CSS: `white-space:pre`)
+        - `osxh_invisible` for temporarily invisible text, for example in a slide of a presentation (typical CSS: `visibility: hidden;`)
+    + `style` (only if the configuration includes `"useCSS": true`) may contain certain css declarations (see below)
 
 * XML nodes that are not elements, attributes or text nodes are ignored.
 
