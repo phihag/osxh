@@ -209,12 +209,14 @@ _describe('Specification should match default configuration', function() {
   });
 
   _it('attributes', function() {
-    var attrTextMatch = readmeText.match(/Attributes must be one of:[\s\S]+?\n(?!  )/m),
-      attrRe = '^ {2}[*] `([a-z0-9]+)`(?: and `([a-z0-9]+)`)?',
-      matches = attrTextMatch[0].match(new RegExp(attrRe, 'gm')),
-      docAttrs = [];
+    var attrTextMatch = readmeText.match(/Attributes must be one of:\n([\s\S]+?)\n(?!  )/m);
+    assert.ok(attrTextMatch, 'Attribute text should be found in README');
 
-    assert.ok(matches, 'regexp should match something');
+    var attrRe = '^\\s+[*+] `([a-z0-9]+)`(?: and `([a-z0-9]+)`)?',
+        matches = attrTextMatch[1].match(new RegExp(attrRe, 'gm')),
+        docAttrs = [];
+
+    assert.ok(matches, 'Should find at least one attribute');
     matches.forEach(function(matchedText) {
       var m = matchedText.match(new RegExp(attrRe));
       assert.ok(m[1]);
