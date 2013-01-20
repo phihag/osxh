@@ -1,2 +1,4 @@
+Fix/test parseerrrors, see http://stackoverflow.com/a/11623204/35070
+
 demo
 allow SVG? If so, can we make a safe SVG subset? Do browsers render JavaScript in SVG?

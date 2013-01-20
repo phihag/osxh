@@ -89,7 +89,8 @@ var _loadTestcase = function(testName, requireOutputs, createDoc) {
 
   if (createDoc) {
     tc.doc = jsdom.jsdom('<html>\n<body></body>\n</html>');
-    tc.win = tc.doc.createWindow();
+    tc.win = {};
+    tc.win.document = tc.doc;
     tc.win.XMLSerializer = xmldom.XMLSerializer;
     tc.win.DOMParser = xmldom.DOMParser;
   }
@@ -99,7 +100,7 @@ var _loadTestcase = function(testName, requireOutputs, createDoc) {
 
 var testFuncs = {
 render: function(testName) {
-  var tc = _loadTestcase(testName, true);
+    var tc = _loadTestcase(testName, true);
     var body = tc.win.document.getElementsByTagName('body')[0];
     var rendered,html;
 
@@ -145,8 +146,7 @@ serialize: function(testName) {
   var tc = _loadTestcase(testName, true, false);
   var html = '<html><body>' + tc.inputs + '</body></html>';
   var doc = jsdom.jsdom(html);
-  var win = doc.createWindow();
-  var body = win.document.getElementsByTagName('body')[0];
+  var body = doc.getElementsByTagName('body')[0];
   if (tc.inputs.length > 0) {
     assert.ok(body.childNodes.length > 0);
   }
