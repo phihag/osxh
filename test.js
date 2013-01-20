@@ -117,8 +117,10 @@ render: function(testName) {
     assert.equal(html, tc.outputs);
 
     // Render into an element
-    osxh(tc.config).renderInto(tc.inputs, body);
+    rendered = osxh(tc.config).renderInto(tc.inputs, body);
     html = _unambiguousHTML(body.innerHTML);
+    assert.equal(html, tc.outputs);
+    html = _unambiguousHTML(_domNodesToHTML(rendered, tc.doc));
     assert.equal(html, tc.outputs);
 
     // Render into an xmldom document

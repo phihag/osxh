@@ -196,12 +196,14 @@ var osxh = (function(addCfg, glbls) {
 
   /**
   * Renders the OSXH string str into the DOM element container.
+  * @returns The rendered DOM objects as an array.
   */
   renderInto: function(str, container) {
     var nodes = _render(str, container.ownerDocument);
     nodes.forEach(function(n) {
       container.appendChild(n);
     });
+    return nodes;
   },
   config: cfg,
   /**
