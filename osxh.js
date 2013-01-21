@@ -110,7 +110,17 @@ var osxh = (function(addCfg, glbls) {
     return (new glbls.XMLSerializer()).serializeToString(xmlDoc);
   };
   var _parseXML = function(str) {
-    return (new glbls.DOMParser()).parseFromString(str, "text/xml");
+    var _onError = function(msg) {
+      throw new OSXHError(msg);
+    };
+    var parser = new glbls.DOMParser({
+      errorHandler: {warning:_onError,error:_onError,fatalError:_onError}
+    });
+    var res = parser.parseFromString(str, "text/xml");
+    if (res.getElementsByTagName("parsererror").length > 0) {
+      throw new OSXHError("XML input is not well-formed");
+    }
+    return res;
   };
   var _renderNodes = function(nodes, doc, fixTagName) {
     fixTagName = fixTagName || function(tn) {return tn;};
