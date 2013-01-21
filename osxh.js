@@ -40,7 +40,7 @@ var osxh = (function(addCfg, glbls) {
     _DOM_TEXT_NODE = 3,
     _DOM_DOCUMENT_NODE = 9,
     cfg = {
-      "elements": ["a", "b", "br", "code", "div", "em", "h1", "h2", "h3", "h4", "h5", "h6", "i", "img", "li", "ol", "p", "span", "strong", "table", "tbody", "td", "tfoot", "th", "thead", "tr", "u", "ul"],
+      "elements": ["a", "b", "br", "code", "div", "em", "figcaption", "figure", "h1", "h2", "h3", "h4", "h5", "h6", "i", "img", "li", "ol", "p", "span", "strong", "table", "tbody", "td", "tfoot", "th", "thead", "tr", "u", "ul"],
       "attributes": {
         "href":   {"tagName": "^a$",     "value": "^(?:https?:\/\/|mailto:)"},
         "src":    {"tagName": "^img$",   "value": "^data:image\/(?:gif|jpeg|png);"},

@@ -6,6 +6,10 @@ This test lists all allowed elements.
 <code>code</code>
 <div>div</div>
 <em>em</em>
+<figure>
+	Hey
+	<figcaption>Interesting</figcaption>
+</figure>
 <h1>h1</h1>
 <h2>h2</h2>
 <h3>h3</h3>

@@ -42,7 +42,7 @@ Specification
 OSXH is an application of [XML](http://www.w3.org/TR/REC-xml/), with the following restrictions:
 
 * The root element must have the tag name `osxh`.
-* By default, all other elements must be one of `a`, `b`, `br`, `code`, `div`, `em`, `h1`, `h2`, `h3`, `h4`, `h5`, `h6`, `i`, `img`, `li`, `ol`, `p`, `span`, `strong`, `table`, `tbody`, `td`, `tfoot`, `th`, `thead`, `tr`, `u`, `ul`.
+* By default, all other elements must be one of `a`, `b`, `br`, `code`, `div`, `em`, `figcaption`, `figure`, `h1`, `h2`, `h3`, `h4`, `h5`, `h6`, `i`, `img`, `li`, `ol`, `p`, `span`, `strong`, `table`, `tbody`, `td`, `tfoot`, `th`, `thead`, `tr`, `u`, `ul`.
 * Attributes must be one of:
     + `href` (only on `a`) may contain URLs starting with `http://`, `https://`, or `mailto:`.
     + `src` (only on `img`) must start with either `data:image/gif;`, `data:image/jpeg;`, or `data:image/png;`.
